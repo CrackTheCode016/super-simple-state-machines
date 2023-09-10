@@ -2,7 +2,8 @@
 /// - P = Participant type
 /// - S = State to keep track of and update
 /// - E = Custom error type
-pub trait FiniteStateMachine<P, S, E> {
+/// TODO: Notice the use of the generic trait -= definitely need to use associated types here!
+pub trait FiniteStateMachine<P: Peer<Status>, Status, S, E> {
     /// Defines some initial state
     fn inital() -> S;
 
@@ -23,4 +24,16 @@ pub trait FiniteStateMachine<P, S, E> {
 
     /// Picks author
     fn pick_author(&mut self);
+}
+
+/// A generic peer for a state machine.
+pub trait Peer<Status> {
+    /// Create a new peer instance.
+    fn create(id: u32) -> Self;
+
+    /// Get the current status of a peer.
+    fn status(&self) -> &Status;
+
+    /// Change the status of the peer.
+    fn change_status(&mut self, status: Status);
 }
