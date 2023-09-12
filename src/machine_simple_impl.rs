@@ -40,7 +40,7 @@ pub struct Machine<S> {
     pub peers: HashMap<u32, Participant>,
 }
 
-impl FiniteStateMachine<Participant, ParticipantStatus, State, MachineError> for Machine<State> {
+impl FiniteStateMachine<Participant, State, MachineError> for Machine<State> {
     fn inital() -> State {
         State { status: false }
     }
@@ -126,7 +126,8 @@ impl<S> Machine<S> {
     }
 }
 
-impl Peer<ParticipantStatus> for Participant {
+impl Peer for Participant {
+    type Status = ParticipantStatus;
     fn create(id: u32) -> Self {
         Participant {
             address: id,
@@ -149,7 +150,7 @@ mod tests {
     use crate::util::generate_participiants;
 
     fn create_machine_with_peers() -> Machine<State> {
-        let peer_gen = generate_participiants::<Participant, ParticipantStatus>(3);
+        let peer_gen = generate_participiants::<Participant>(3);
         let mut peers = HashMap::new();
         for peer in peer_gen {
             peers.insert(peer.address, peer.clone());

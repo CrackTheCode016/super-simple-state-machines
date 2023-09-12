@@ -3,7 +3,7 @@
 /// - S = State to keep track of and update
 /// - E = Custom error type
 /// TODO: Notice the use of the generic trait -= definitely need to use associated types here!
-pub trait FiniteStateMachine<P: Peer<Status>, Status, S, E> {
+pub trait FiniteStateMachine<P: Peer, S, E> {
     /// Defines some initial state
     fn inital() -> S;
 
@@ -27,13 +27,19 @@ pub trait FiniteStateMachine<P: Peer<Status>, Status, S, E> {
 }
 
 /// A generic peer for a state machine.
-pub trait Peer<Status> {
+/// Note we could've done: pub trait Peer<Status>, aka a generic. However, in implementation
+/// we would need to define what Status is each time we use this trait. i.e., P: Peer<Status>, Status
+/// Hence, the associated type, which allows us to define Status for our Peer once.
+/// It is also scope specific - why should a machine care about the status of the Peer: impl FiniteStateMachine<Participant, ParticipantStatus, State, MachineError> for Machine<State>
+/// Associated types allow us to fully leverage generic typing, scope it, and define a DX.
+pub trait Peer {
+    type Status;
     /// Create a new peer instance.
     fn create(id: u32) -> Self;
 
     /// Get the current status of a peer.
-    fn status(&self) -> &Status;
+    fn status(&self) -> &Self::Status;
 
     /// Change the status of the peer.
-    fn change_status(&mut self, status: Status);
+    fn change_status(&mut self, status: Self::Status);
 }

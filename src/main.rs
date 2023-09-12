@@ -17,7 +17,7 @@ use util::generate_participiants;
 ///         2d. If a follower attempts to change state, they get a timeout.
 
 fn main() -> Result<(), MachineError> {
-    let peer_gen = generate_participiants::<Participant, ParticipantStatus>(3);
+    let peer_gen = generate_participiants::<Participant>(3);
     let mut peers = HashMap::new();
     for peer in peer_gen {
         peers.insert(peer.address, peer.clone());
