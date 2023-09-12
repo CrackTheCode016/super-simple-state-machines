@@ -3,6 +3,9 @@
 /// - S = State to keep track of and update
 /// - E = Custom error type
 /// TODO: Notice the use of the generic trait -= definitely need to use associated types here!
+/// TODO: Add some common "Config" trait for the state machine? Replaces the generic parameters?
+/// TODO: It may be better to illustrate some common Config for the whole machine,
+/// Or once the machine is implemented, then we have access to various types for other implementations.
 pub trait FiniteStateMachine<P: Peer, S, E> {
     /// Defines some initial state
     fn inital() -> S;
