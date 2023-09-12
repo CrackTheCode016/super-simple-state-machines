@@ -4,7 +4,7 @@ mod machine_simple_impl;
 mod util;
 
 use generic_types::{FiniteStateMachine, Peer};
-use machine_simple_impl::{Machine, MachineError, Participant, ParticipantStatus, State};
+use machine_simple_impl::{MachineError, Participant, ParticipantStatus, SimpleMachine, State};
 use util::generate_participiants;
 
 /// The super simple state machine that:
@@ -26,8 +26,8 @@ fn main() -> Result<(), MachineError> {
     let mut author = peers.get(&0).unwrap().clone();
     author.change_status(ParticipantStatus::Author);
 
-    let intital_state = Machine::<State>::inital();
-    let mut machine = Machine::<State>::new(intital_state, peers, author.clone());
+    let intital_state = SimpleMachine::<State>::inital();
+    let mut machine = SimpleMachine::<State>::new(intital_state, peers, author.clone());
 
     loop {
         let mut current_author = machine.current_author.clone();

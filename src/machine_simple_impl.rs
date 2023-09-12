@@ -32,15 +32,15 @@ pub struct State {
     pub status: bool,
 }
 
-/// Base machine for state
-pub struct Machine<S> {
+/// A simple machine for state
+pub struct SimpleMachine<S> {
     pub state: S,
     pub prev_state: Option<S>,
     pub current_author: Participant,
     pub peers: HashMap<u32, Participant>,
 }
 
-impl FiniteStateMachine<Participant, State, MachineError> for Machine<State> {
+impl FiniteStateMachine<Participant, State, MachineError> for SimpleMachine<State> {
     fn inital() -> State {
         State { status: false }
     }
@@ -115,9 +115,9 @@ impl FiniteStateMachine<Participant, State, MachineError> for Machine<State> {
     }
 }
 
-impl<S> Machine<S> {
+impl<S> SimpleMachine<S> {
     pub fn new(s: S, peers: HashMap<u32, Participant>, current_author: Participant) -> Self {
-        Machine {
+        SimpleMachine {
             state: s,
             prev_state: None,
             current_author,
@@ -149,7 +149,7 @@ mod tests {
     use super::*;
     use crate::util::generate_participiants;
 
-    fn create_machine_with_peers() -> Machine<State> {
+    fn create_machine_with_peers() -> SimpleMachine<State> {
         let peer_gen = generate_participiants::<Participant>(3);
         let mut peers = HashMap::new();
         for peer in peer_gen {
@@ -160,8 +160,8 @@ mod tests {
         author.change_status(ParticipantStatus::Author);
         peers.insert(author.address, author.clone());
 
-        let intital_state = Machine::<State>::inital();
-        Machine::<State>::new(intital_state, peers, author.clone())
+        let intital_state = SimpleMachine::<State>::inital();
+        SimpleMachine::<State>::new(intital_state, peers, author.clone())
     }
 
     #[test]
